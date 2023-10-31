@@ -1,33 +1,36 @@
 #!/usr/bin/python3
-'''
-    app for registering blueprint and starting flask
-'''
-from flask import Flask, make_response, jsonify
-from flask_cors import CORS
+
+"""
+implement status route
+return the status of API
+"""
+
+
+from flask import Flask, jsonify, make_response
 from models import storage
 from api.v1.views import app_views
+from flask_cors import CORS
 from os import getenv
 
 
 app = Flask(__name__)
-CORS(app, origins="0.0.0.0")
 app.register_blueprint(app_views)
-
-
-@app.teardown_appcontext
-def tear_down(self):
-    '''
-    close query after each session
-    '''
-    storage.close()
+CORS(app, resources={r"/*": {"origins": "http://0.0.0.0"}})
 
 
 @app.errorhandler(404)
 def not_found(error):
-    '''
-    return JSON formatted 404 status code response
-    '''
+    """handler for 404 errors that returns a
+    JSON-formatted 404 status code response"""
     return make_response(jsonify({'error': 'Not found'}), 404)
+
+
+@app.teardown_appcontext
+def teardown(self):
+    """
+    close storage session
+    """
+    storage.close()
 
 
 if __name__ == "__main__":
