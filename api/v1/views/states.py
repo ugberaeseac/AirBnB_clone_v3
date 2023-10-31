@@ -8,9 +8,6 @@ from os import getenv
 import json
 
 
-host = getenv('HBNB_API_HOST')
-port = getenv('HBNB_API_PORT')
-
 @app_views.route('/states', methods=['GET'], strict_slashes=False)
 def get_list_of_all_states():
     """Retrieves the list of all State objects"""
@@ -51,9 +48,9 @@ def create_state():
     try:
         data = request.get_json()
     except Exception:
-        return jsonify("Not a JSON"), 400
+        return jsonify({"error": "Not a JSON"}), 400
     if 'name' not in data:
-        return jsonify("Missing name"), 400
+        return jsonify({"error": "Missing name"}), 400
     new_state = State(**data)
     from models import storage
     new_state.save()

@@ -8,9 +8,6 @@ import json
 from api.v1.views import app_views
 
 
-host = getenv('HBNB_API_HOST')
-port = getenv('HBNB_API_PORT')
-
 @app_views.route('/cities/<city_id>/places', methods=['GET'], strict_slashes=False)
 def get_list_of_all_places(city_id):
     """Retrieves the list of all Place objects"""
