@@ -45,14 +45,13 @@ def delete_user_ob(user_id):
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
 def create_user():
     """Creates a State"""
-    try:
-        data = request.get_json()
-    except Exception:
-        return jsonify("Not a JSON"), 400
-    if 'email' not in data:
-        return jsonify("Missing email"), 400
-    if 'password' not in data:
-        return jsonify("Missing password"), 400
+    if not request.get_json():
+        return jsonify({"error": "Not a JSON"}), 400
+    if 'email' not in request.get_json():
+        return jsonify({"error": "Missing email"}), 400
+    if 'password' not in request.get_json():
+        return jsonify({"error": "Missing password"}), 400
+    data = request.get_json()
     new_user = User(**data)
     from models import storage
     new_user.save()
@@ -62,12 +61,11 @@ def create_user():
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
 def update_user(user_id):
     """Updates a State object"""
-    try:
-        data = request.get_json()
-    except Exception:
+    if not request.get_json():
         return jsonify({'Not a JSON'}), 400
 
     from models import storage
+    data = request.get_json()
     user = storage.get(User, user_id)
     ignored = ['id', 'email', 'created_at', 'updated_at']
     if user:
