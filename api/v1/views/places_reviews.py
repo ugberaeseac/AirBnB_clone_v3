@@ -68,6 +68,7 @@ def create_review(place_id):
     Creates a new Review object using place_id
     """
 
+    user_id = request.get_json().get('user_id')
     if not request.get_json():
         return jsonify({"error": "Not a JSON"}), 400
     elif "user_id" not in request.get_json():
@@ -80,7 +81,6 @@ def create_review(place_id):
         place = storage.get(Place, place_id)
         if place is None:
             abort(404)
-    # user_id = request.get_json().get('user_id')
         new_review = Review()
         new_review.place_id = place_id
         new_review.user_id = request.get_json().get('user_id')
