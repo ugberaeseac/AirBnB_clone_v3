@@ -45,12 +45,11 @@ def delete_state_ob(state_id):
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def create_state():
     """Creates a State"""
-    try:
-        data = request.get_json()
-    except Exception:
+    if not request.get_json():
         return jsonify({"error": "Not a JSON"}), 400
-    if 'name' not in data:
+    if "name" not in request.get_json():
         return jsonify({"error": "Missing name"}), 400
+    data = request.get_json()
     new_state = State(**data)
     from models import storage
     new_state.save()
@@ -60,10 +59,9 @@ def create_state():
 @app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def update_state(state_id):
     """Updates a State object"""
-    try:
-        data = request.get_json()
-    except Exception:
-        return jsonify({'Not a JSON'}), 400
+    data = request.get_json()
+    if not request.get_json():
+        return jsonify({"error": "Not a JSON"}), 400
 
     from models import storage
     state = storage.get(State, state_id)
