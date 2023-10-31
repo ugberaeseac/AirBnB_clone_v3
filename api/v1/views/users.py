@@ -8,9 +8,6 @@ import json
 from api.v1.views import app_views
 
 
-host = getenv('HBNB_API_HOST')
-port = getenv('HBNB_API_PORT')
-
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
 def get_list_of_all_users():
     """Retrieves the list of all State objects"""
@@ -72,9 +69,11 @@ def update_user(user_id):
 
     from models import storage
     user = storage.get(User, user_id)
+    ignored = ['id', 'email', 'created_at', 'updated_at']
     if user:
         for key, value in data.items():
-            setattr(user, key, value)
+            if key not in ignored:
+                setattr(user, key, value)
         user.save()
         return (user.to_dict())
     abort(404)  # If no matching state is found, return a 404 error
