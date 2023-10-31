@@ -62,7 +62,7 @@ def create_user():
 def update_user(user_id):
     """Updates a State object"""
     if not request.get_json():
-        return jsonify({'Not a JSON'}), 400
+        return jsonify({"error": "Not a JSON"}), 400
 
     from models import storage
     data = request.get_json()
